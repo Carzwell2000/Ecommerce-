@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Shop in style</h1>
+            <p class="lead fw-normal text-white-50 mb-0">With this shop homepage template</p>
+        </div>
+    </div>
+</header>
+
+<!-- Product Section -->
+<section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-4">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+            {% for product in products %}
+            <div class="col mb-5">
+                <div class="card h-100 shadow-sm border-0">
+                    {% if product.is_sale %}
+                    <!-- Sale badge -->
+                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                        Promotion
+                    </div>
+                    {% endif %}
+
+                    <!-- Product image -->
+                    <img class="card-img-top p-2" src="{{ product.image.url }}" alt="{{ product.name }}"
+                        style="height: 250px; object-fit: contain;" />
+
+                    <!-- Product details -->
+                    <div class="card-body p-3">
+                        <div class="text-center">
+                            <h5 class="fw-bold {% if product.is_sale %}text-primary{% endif %}">
+                                {{ product.name }}
+                            </h5>
+
+                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                <div class="bi-star-fill me-1"></div>
+                                <div class="bi-star-fill me-1"></div>
+                                <div class="bi-star-fill me-1"></div>
+                                <div class="bi-star-fill me-1"></div>
+                                <div class="bi-star-fill"></div>
+                            </div>
+
+                            {% if product.is_sale %}
+                            <p class="mb-0">
+                                <strike class="text-muted">${{ product.price }}</strike>
+                                <span class="fw-bold text-danger ms-2">${{ product.sale_price }}</span>
+                            </p>
+                            {% else %}
+                            <p class="text-dark fs-5">${{ product.price }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Product actions -->
+                    <div class="card-footer p-3 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark w-100" href="{% url 'product' product.id %}">
+                                View Product
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

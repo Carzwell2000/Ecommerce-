@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <!-- Main product card -->
+        <div class="col">
+            <div class="card h-100 border-0">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                    style="height: 200px; object-fit: contain; background-color: #f8f9fa;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    {% if product.is_sale %}
+                    <strike class="text-muted">${{ product.price }}</strike>
+                    <span class="fw-bold text-danger ms-2">${{ product.sale_price }}</span>
+                    {% else %}
+                    <span class="fw-bold">${{ product.price }}</span>
+                    {% endif %}
+
+                    <!-- Quantity input -->
+                    <div class="my-2">
+                        <input type="number" min="1" max="100" value="1" class="form-control form-control-sm qty-input"
+                            data-product-id="{{ product.id }}">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-house-door-fill me-1"></i> Home
+                        </a>
+                        <button class="btn btn-dark btn-sm add-cart-btn" data-product-id="{{ product.id }}">
+                            Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extra images each as their own card -->
+        {% for img in extra_images %}
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="{{ img.image.url }}" class="card-img-top" alt="Extra image {{ forloop.counter }}"
+                    style="height: 200px; object-fit: contain; background-color: #f8f9fa;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ img.title|default:product.name }}</h5>
+                    {% if product.is_sale %}
+                    <strike class="text-muted">${{ product.price }}</strike>
+                    <span class="fw-bold text-danger ms-2">${{ product.sale_price }}</span>
+                    {% else %}
+                    <span class="fw-bold">${{ product.price }}</span>
+                    {% endif %}
+
+                    <!-- Quantity input -->
+                    <div class="my-2">
+                        <input type="number" min="1" max="100" value="1" class="form-control form-control-sm qty-input"
+                            data-product-id="{{ product.id }}">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-house-door-fill me-1"></i> Home
+                        </a>
+                        <button class="btn btn-dark btn-sm add-cart-btn" data-product-id="{{ product.id }}">
+                            Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // Attach click event to all add-cart buttons
+    $(document).on('click', '.add-cart-btn', function (e) {
+        e.preventDefault();
+        const productId = $(this).data('product-id');
+        const qtyInput = $(this).closest('.card-body').find('.qty-input').val() || 1;
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "cart_add" %}',
+            data: {
+                product_id: productId,
+                product_qty: qtyInput,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function (json) {
+                document.getElementById("cart_quantity").textContent = json.qty;
+                alert("You cart has been updated");
+            },
+            error: function (xhr, errmsg, err) {
+                console.error(xhr.status + ": " + xhr.responseText);
+                alert("Error adding to cart. Try again.");
+            }
+        });
+    });
+</script>
+{% endblock %}
