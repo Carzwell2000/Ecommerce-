@@ -24,17 +24,13 @@ class Profile(models.Model):
         return self.user.username
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    # Only create a profile if the user was just created
+def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        user_profile = Profile(user=instance)
+        user_profile.save()
 
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    # This ensures the profile is also saved when the user is updated
-    instance.profile.save()
+post_save.connect(create_profile, sender=User)
 
 
 class Category(models.Model):

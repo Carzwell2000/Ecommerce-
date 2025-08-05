@@ -8,4 +8,7 @@ urlpatterns = [
     path('payment_error/', views.payment_error, name='payment_error'),
     path('process_order', views.process_order, name='process_order'),
     path('billing_info', views.billing_info, name='billing_info'),
+    path('not_shipped', views.not_shipped, name='not_shipped'),
+    path('shipped', views.shipped, name='shipped'),
+    path('orders/<int:pk>/', views.orders, name='orders'),
 ]

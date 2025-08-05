@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Load environment variables from .env
 
@@ -82,8 +86,17 @@ WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # This is the standard location
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': os.environ.get('PASSWORD'),
+        'HOST': 'ballast.proxy.rlwy.net',
+        'PORT': '5432',
+
+
+        #  'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3'
+        # This is the standard location
     }
 }
 

@@ -90,12 +90,11 @@ def register_user(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(request, username=username, password=password)
             login(request, user)
-
             messages.success(request, "Registration successful.")
             return redirect('home')
         else:

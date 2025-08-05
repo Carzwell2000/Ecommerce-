@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-center">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#!">Welcome to Caldon pharmacy</a>
+        <a class="navbar-brand" href="#!">Welcome to Caldon Pharmacy</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -12,22 +12,27 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'search' %}">Search</a></li>
-                {% if user.is_authenticated %}
 
+                {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">Profiles</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                        <li><a class="dropdown-item" href="{% url 'update_user' %}">User profile</a>
-                        </li>
-                        <li><a class="dropdown-item" href="{% url 'update_info' %}">user_info</a>
-                        </li>
-
-
-
+                        <li><a class="dropdown-item" href="{% url 'update_user' %}">User Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'update_info' %}">User Info</a></li>
                     </ul>
                 </li>
+                {% if user.is_superuser %}
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'shipped' %}">Collected</a></li>
+                        <li><a class="dropdown-item" href="{% url 'not_shipped' %}">Not Collected</a></li>
+                    </ul>
+                </li>
+                {% endif %}
 
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                 {% else %}

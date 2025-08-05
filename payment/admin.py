@@ -21,7 +21,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ["date_ordered"]
     fields = [
         "user", "full_name", "email", "shipping_address",
-        "amount_paid", "date_ordered", "shipped"]
+        "amount_paid", "date_ordered", "shipped", "date_shipped"]
     inlines = [OrderItemInline]
 
 
