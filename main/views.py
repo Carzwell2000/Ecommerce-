@@ -12,6 +12,11 @@ import json
 from payment.forms import ShippingForm
 from payment.models import ShippingAddress
 from django.views.decorators.csrf import csrf_protect
+from django.urls import reverse
+# Import PayPal form for payments
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
+import uuid
 
 
 def home(request):

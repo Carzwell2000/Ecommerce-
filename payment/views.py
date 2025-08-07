@@ -4,7 +4,12 @@ from django.contrib import messages
 from payment.forms import ShippingForm, PaymentForm
 from payment.models import ShippingAddress, Order, OrderIterm
 from main.models import Product, Profile
+from django.urls import reverse
 import datetime
+import uuid
+from django.conf import settings
+
+from paypal.standard.forms import PayPalPaymentsForm
 
 
 def orders(request, pk):
@@ -143,15 +148,44 @@ def billing_info(request):
         my_shipping = request.POST
         request.session['my_shipping'] = my_shipping
 
-        billing_form = PaymentForm()
+        host = request.get_host()
 
-        return render(request, 'billing_info.html', {
-            'cart_products': cart_products,
-            'quantities': quantities,
-            'totals': totals,
-            'shipping_info': request.POST,
-            'billing_form': billing_form
-        })
+        paypal_dict = {
+            'business': settings.PAYPAL_RECEIVER_EMAIL,
+            'amount': totals,
+            'item_name': ' Book Order  ',
+            'invoice': str(uuid.uuid4()),
+            'currency_code': 'USD',
+            'notify_url': 'http://{}{}'.format(host, reverse("paypal-ipn")),
+            'return_url': 'http://{}{}'.format(host, reverse('payment_success')),
+            'cancel_return': 'http://{}{}'.format(host, reverse('payment_cancel')),
+
+        }
+        paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+        if request.user.is_authenticated:
+            billing_form = PaymentForm()
+
+            return render(request, 'billing_info.html', {
+                'cart_products': cart_products,
+                'quantities': quantities,
+                'totals': totals,
+                'shipping_info': request.POST,
+                'billing_form': billing_form,
+                'paypal_form': paypal_form,
+            })
+        else:
+            billing_form = PaymentForm()
+
+            return render(request, 'billing_info.html', {
+                'cart_products': cart_products,
+                'quantities': quantities,
+                'totals': totals,
+                'shipping_info': request.POST,
+                'billing_form': billing_form,
+                'paypal_form': paypal_form,
+            })
+
     else:
         messages.success(request, "Access Denied")
         return redirect('home')

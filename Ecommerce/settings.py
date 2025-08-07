@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'cart',
-    'payment'
+    'payment',
+    'paypal.standard.ipn',
+
 ]
 
 MIDDLEWARE = [
@@ -86,16 +88,17 @@ WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': os.environ.get('PASSWORD'),
-        'HOST': 'metro.proxy.rlwy.net',
-        'PORT': '32619',
+        #   'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #  'NAME': 'railway',
+        #  'USER': 'postgres',
+        #  'PASSWORD': os.environ.get('PASSWORD'),
+        #  'HOST': 'ballast.proxy.rlwy.net',
+        # 'PORT': '5432',
 
 
-        #  'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
+
         # This is the standard location
     }
 }
@@ -146,3 +149,7 @@ STATICFILES_DIRS = ['static/']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# PayPal settings
+PAYPAL_TEST = True  # Set to False in production
+
+PAYPAL_RECEIVER_EMAIL = 'sibanda@gmail.com'
